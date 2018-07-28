@@ -4,7 +4,10 @@
 .vscode/
 .packages
 .pub/
+*.iml
+*.lock
+android/
 build/
-ios/.generated/
+ios/
 packages
 .flutter-plugins
