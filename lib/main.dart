@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_calendar/movie_list.dart';
 import 'package:movie_calendar/movie_parser.dart';
 
 void main() => runApp(new MyApp());
@@ -48,7 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
-    parser.parsePathe();
+    parser.parsePathe(new DateTime.now()).then((r) {
+      Navigator.push(context, new MaterialPageRoute(builder: (c) => new MovieListPage(r)));
+    });
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
