@@ -13,14 +13,14 @@ class TimeText extends StatefulWidget {
 }
 
 class TimeTextState extends State<TimeText> {
-  bool _hasStarted = false;
-  bool get hasStarted => _hasStarted;
+  bool get hasStarted => startingIn <= Duration.zero;
+  bool get justStarted => hasStarted && startingIn > new Duration(minutes: -5);
 
   Duration _startingIn;
   Duration get startingIn => _startingIn;
 
-  bool _startsSoon = false;
-  bool get startsSoon => _startsSoon;
+  bool get startsSoon => startingIn <= new Duration(minutes: 60) &&
+      startingIn > Duration.zero;
 
   Timer timer;
 
@@ -40,25 +40,20 @@ class TimeTextState extends State<TimeText> {
   void updateTime() {
     setState(() {
       _startingIn = widget.time.start.difference(new DateTime.now());
-      _hasStarted = new DateTime.now().isAfter(widget.time.start);
-      _startsSoon = startingIn <= new Duration(minutes: 60);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return new Text(
-        hasStarted ? 'Just started' : (
-            startsSoon ? '${startingIn
-                .inMinutes} min' :
-            MovieTime.timeFormat.format(
-                widget.time.start)),
+        justStarted ? 'Just started' :
+        (startsSoon ? '${startingIn.inMinutes + 1} min' :
+        MovieTime.timeFormat.format(widget.time.start)),
         style: new TextStyle(
-            color: hasStarted
-                ? Colors.red
-                : (startsSoon
-                ? Colors.orange
-                : Colors.green)
+            color:
+            hasStarted
+                ? (justStarted ? Colors.red : Colors.grey)
+                : (startsSoon ? Colors.orange : Colors.green)
         )
     );
   }
