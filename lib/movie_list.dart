@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:movie_calendar/movie.dart';
+import 'package:movie_calendar/time_text.dart';
 
 class MovieListPage extends StatelessWidget {
   Future<List<Movie>> _movieFuture;
@@ -43,20 +44,7 @@ class MovieListPage extends StatelessWidget {
                     subtitle: new Row(
                         children: <Widget>[
                           new Expanded(
-                              child: new Text(
-                                  hasStarted ? 'Just started' : (
-                                      startsSoon ? '${startingIn
-                                          .inMinutes} min' :
-                                      MovieTime.timeFormat.format(
-                                          nearest.start)),
-                                  style: new TextStyle(
-                                      color: hasStarted
-                                          ? Colors.red
-                                          : (startsSoon
-                                          ? Colors.orange
-                                          : Colors.green)
-                                  )
-                              )
+                              child: new TimeText(nearest)
                           ),
                           new Text('Euroscoop')
                         ])
