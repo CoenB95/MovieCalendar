@@ -5,7 +5,7 @@ import 'package:movie_calendar/movie.dart';
 import 'package:movie_calendar/time_text.dart';
 
 class MovieListPage extends StatelessWidget {
-  Future<List<Movie>> _movieFuture;
+  final Future<List<Movie>> _movieFuture;
 
   MovieListPage(this._movieFuture);
 
@@ -28,31 +28,53 @@ class MovieListPage extends StatelessWidget {
           return new ListView.builder(
               itemCount: _movies.length,
               itemBuilder: (context, index) {
-                _movies[index].times.sort((t1, t2) =>
-                    t1.start.compareTo(t2.end));
-                var nearest = _movies[index].times.first;
-                var startingIn = nearest.start.difference(new DateTime.now());
-                bool hasStarted = new DateTime.now().isAfter(nearest.start);
-
-                bool startsSoon = startingIn <= new Duration(minutes: 60);
-
-                //return new Card(
+                Movie movie = _movies[index];
                 return new ListTile(
-                    title: new Text(_movies[index].title
+                    title: new Text(movie.title
 
                     ),
                     subtitle: new Row(
-                        children: <Widget>[
-                          new Expanded(
-                              child: new TimeText(nearest)
-                          ),
-                          new Text('Euroscoop')
-                        ])
+                        children: createShowTimesRow(movie)
+                    )
                 );
-                //);
               }
           );
         })
     );
+  }
+
+  List<Widget> createShowTimesRow(Movie movie, {int maxColumns = 0}) {
+    List<Widget> result = [];
+
+    if (movie == null)
+      return result;
+
+    List<MovieTime> timesOfToday = movie.times.where((t) =>
+        t.startsAtDate(new DateTime.now())).toList();
+
+    if (timesOfToday.isEmpty) {
+      result.add(
+          new Text("No shows today",
+              style: new TextStyle(
+                  color: Colors.grey
+              )
+          )
+      );
+      return result;
+    }
+
+    if (maxColumns <= 0)
+      maxColumns = timesOfToday.length;
+
+    for (int i = 0; i < maxColumns; i++) {
+      result.add(
+        new Padding(
+          padding: new EdgeInsets.only(right: 10.0),
+          child: new TimeText(timesOfToday[i])
+        )
+      );
+    }
+
+    return result;
   }
 }

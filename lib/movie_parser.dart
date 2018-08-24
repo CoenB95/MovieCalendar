@@ -6,7 +6,6 @@ import 'package:movie_calendar/movie.dart';
 import 'package:xml/xml.dart' as xml;
 
 class MovieParser {
-  static final int _midnightHour = 4;
   static final DateFormat _dateFormatPathe = new DateFormat('d-MM-y');
   static final DateFormat _dateTimeFormatPathe = new DateFormat('dd-MM-y HH:mm');
 
@@ -75,7 +74,7 @@ class MovieParser {
                     orElse: () => null)?.text;
                 movieTime.start = _dateTimeFormatPathe.parse(
                     _dateFormatPathe.format(date) + ' ' + rawStartTime);
-                if (movieTime.start.hour < _midnightHour)
+                if (movieTime.start.hour < MovieTime.midnightHour)
                   movieTime.start = movieTime.start.add(new Duration(days: 1));
 
                 //Parse end time
@@ -85,7 +84,7 @@ class MovieParser {
                     orElse: () => null)?.text;
                 movieTime.end = _dateTimeFormatPathe.parse(
                     _dateFormatPathe.format(date) + ' ' + rawEndTime);
-                if (movieTime.end.hour < _midnightHour)
+                if (movieTime.end.hour < MovieTime.midnightHour)
                   movieTime.end = movieTime.end.add(new Duration(days: 1));
 
                 movie.times.add(movieTime);
