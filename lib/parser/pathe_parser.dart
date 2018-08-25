@@ -94,7 +94,7 @@ class MovieParserPathe extends MovieParser {
           }
           result.add(movie);
         });
-        print(result);
+        MovieParser.debugPrintMovieTimes(result);
       });
       return result;
     });
