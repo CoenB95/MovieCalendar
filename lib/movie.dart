@@ -1,32 +1,26 @@
-import 'package:intl/intl.dart';
+import 'package:movie_calendar/datetime/date_utils.dart';
+import 'package:movie_calendar/datetime/time_utils.dart';
 
 class Movie {
   String title;
-  List<MovieTime> times = [];
+  Map<Date, List<MovieTime>> times = {};
+
+  @override
+  String toString() => "'$title'@$times";
 }
 
 class MovieTime {
   static final int midnightHour = 4;
-  static DateFormat timeFormat = new DateFormat('HH:mm');
 
-  DateTime start;
-  DateTime end;
+  Time start;
+  Time end;
   bool active;
   bool full;
   String link;
 
-  bool startsAtDate(DateTime date) {
-    if (date.hour < midnightHour)
-      return start.isBefore(new DateTime(date.year, date.month, date.day,
-          midnightHour, 0));
-    else
-      return start.isBefore(new DateTime(date.year, date.month, date.day + 1,
-          midnightHour, 0));
-  }
-
   @override
   String toString() {
-    return timeFormat.format(start);
+    return start.format();
   }
 }
 

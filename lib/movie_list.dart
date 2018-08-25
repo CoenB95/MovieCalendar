@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:movie_calendar/datetime/date_utils.dart';
 import 'package:movie_calendar/movie.dart';
 import 'package:movie_calendar/time_text.dart';
 
@@ -49,8 +50,7 @@ class MovieListPage extends StatelessWidget {
     if (movie == null)
       return result;
 
-    List<MovieTime> timesOfToday = movie.times.where((t) =>
-        t.startsAtDate(new DateTime.now())).toList();
+    List<MovieTime> timesOfToday = movie.times[Date.today()];
 
     if (timesOfToday.isEmpty) {
       result.add(

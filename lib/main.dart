@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movie_calendar/datetime/date_utils.dart';
 import 'package:movie_calendar/movie_list.dart';
 import 'package:movie_calendar/movie_parser.dart';
+import 'package:movie_calendar/parser/pathe_parser.dart';
 
 void main() => runApp(new MyApp());
 
@@ -45,14 +47,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  MovieParser parser = new MovieParser();
+  MovieParser parser = new MovieParserPathe();
   int _counter = 0;
 
   void _incrementCounter() {
     Navigator.push(context, new MaterialPageRoute(
         builder: (c) =>
     new MovieListPage(
-        parser.parsePathe(new DateTime.now())
+        parser.fetchMoviesOfDay(Date.today())
     )
     ));
 

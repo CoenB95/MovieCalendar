@@ -1,22 +1,21 @@
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
+import 'package:movie_calendar/datetime/date_utils.dart';
+import 'package:movie_calendar/datetime/time_utils.dart';
 import 'package:movie_calendar/movie.dart';
 import 'package:movie_calendar/movie_parser.dart';
 import 'package:xml/xml.dart' as xml;
 
 class MovieParserPathe extends MovieParser {
-  static final DateFormat _dateFormatPathe = new DateFormat('d-MM-y');
-  static final DateFormat _dateTimeFormatPathe = new DateFormat('dd-MM-y HH:mm');
 
   @override
-  Future<List<Movie>> fetchMoviesOfDay(DateTime date) {
+  Future<List<Movie>> fetchMoviesOfDay(Date date) {
     return new Future(() async {
       List<Movie> result = [];
 
       await http.get('https://www.pathe.nl/update-schedule/19/'
-          '${_dateFormatPathe.format(date)}').then((r) {
+          '${date.format()}').then((r) {
         print('Received response');
         String source = r.body;
 
@@ -51,6 +50,8 @@ class MovieParserPathe extends MovieParser {
               ?.text
               ?.trim();
 
+          movie.times.putIfAbsent(date, () => []);
+
           //Detect individual movies (wrapper)
           var wrapper = item.findElements('div')
               .firstWhere((e) => "schedule__wrapper" == e.getAttribute('class'),
@@ -74,22 +75,20 @@ class MovieParserPathe extends MovieParser {
                     .firstWhere((e) =>
                 "schedule-time__start" == e.getAttribute('class'),
                     orElse: () => null)?.text;
-                movieTime.start = _dateTimeFormatPathe.parse(
-                    _dateFormatPathe.format(date) + ' ' + rawStartTime);
-                if (movieTime.start.hour < MovieTime.midnightHour)
-                  movieTime.start = movieTime.start.add(new Duration(days: 1));
+                movieTime.start = Time.parse(rawStartTime);
+                if (movieTime.start.isBefore(new Time(4, 0)))
+                  movieTime.start = movieTime.start.add(hours: 24);
 
                 //Parse end time
                 String rawEndTime = timeSpan.findAllElements('span')
                     .firstWhere((e) =>
                 "schedule-time__end" == e.getAttribute('class'),
                     orElse: () => null)?.text;
-                movieTime.end = _dateTimeFormatPathe.parse(
-                    _dateFormatPathe.format(date) + ' ' + rawEndTime);
-                if (movieTime.end.hour < MovieTime.midnightHour)
-                  movieTime.end = movieTime.end.add(new Duration(days: 1));
+                movieTime.end = Time.parse(rawEndTime);
+                if (movieTime.end.isBefore(new Time(4, 0)))
+                  movieTime.end = movieTime.end.add(hours: 24);
 
-                movie.times.add(movieTime);
+                movie.times[date].add(movieTime);
               });
             }
           }
