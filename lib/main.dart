@@ -4,7 +4,10 @@ import 'package:movie_calendar/movie_list.dart';
 import 'package:movie_calendar/movie_parser.dart';
 import 'package:movie_calendar/parser/pathe_parser.dart';
 
-void main() => runApp(new MyApp());
+void main() {
+  MaterialPageRoute.debugEnableFadingRoutes = true;
+  runApp(new MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
