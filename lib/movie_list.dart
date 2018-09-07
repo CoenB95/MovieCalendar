@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:movie_calendar/datetime/date_utils.dart';
 import 'package:movie_calendar/movie.dart';
+import 'package:movie_calendar/movie_detail.dart';
 import 'package:movie_calendar/time_text.dart';
 
 class MovieListPage extends StatelessWidget {
@@ -30,13 +31,14 @@ class MovieListPage extends StatelessWidget {
               itemCount: _movies.length,
               itemBuilder: (context, index) {
                 Movie movie = _movies[index];
-                return new ListTile(
-                    title: new Text(movie.title
-
+                return new InkWell(
+                    child: new ListTile(
+                        title: new Text(movie.title),
+                        subtitle: new Row(children: createShowTimesRow(movie))
                     ),
-                    subtitle: new Row(
-                        children: createShowTimesRow(movie)
-                    )
+                  onTap: () => Navigator.push(context, new MaterialPageRoute(
+                      builder: (c) => new MovieDetailPage(movie)
+                  ))
                 );
               }
           );
@@ -52,7 +54,7 @@ class MovieListPage extends StatelessWidget {
 
     List<MovieTime> timesOfToday = movie.times[Date.today()];
 
-    if (timesOfToday.isEmpty) {
+    if (timesOfToday == null || timesOfToday.isEmpty) {
       result.add(
           new Text("No shows today",
               style: new TextStyle(

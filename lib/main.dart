@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.push(context, new MaterialPageRoute(
         builder: (c) =>
     new MovieListPage(
-        parser.fetchMoviesOfDay(Date.today())
+        parser.fetchMoviesOfDays([Date.today(), Date.today().plus(days: 1)])
     )
     ));
 

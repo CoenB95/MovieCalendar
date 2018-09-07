@@ -46,6 +46,10 @@ class Date {
     return new Date(parsed.year, parsed.month, parsed.day);
   }
 
+  Date plus({int years = 0, int months = 0, int days = 0}) {
+    return new Date(year + years, month + months, day + days);
+  }
+
   static Date today() {
     var t = new DateTime.now();
     return new Date(t.year, t.month, t.day);

@@ -7,6 +7,17 @@ abstract class MovieParser {
 
   Future<List<Movie>> fetchMoviesOfDay(Date date);
 
+  Future<List<Movie>> fetchMoviesOfDays(Iterable<Date> dates) {
+    return new Future(() async {
+      List<Movie> result = [];
+      for (Date d in dates) {
+        var day = await fetchMoviesOfDay(d);
+        result.addAll(day);
+      }
+      return result;
+    });
+  }
+
   static void debugPrintMovieTimes(List<Movie> movies) {
     movies.forEach((m) {
       print("'${m.title}'");
