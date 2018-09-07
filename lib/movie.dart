@@ -1,26 +1,26 @@
-import 'package:intl/intl.dart';
+import 'package:movie_calendar/datetime/date_utils.dart';
+import 'package:movie_calendar/datetime/time_utils.dart';
 
 class Movie {
   String title;
-  int _id = 3015;
-  String suburl = "a-prayer-before-dawn-601923";
-  List<MovieTime> times = [];
-  //List<Classification> classification = ["16", "language", "violence"];
-  //List<MovieTime> timeslots: ["22:00"];//active [1], full [0], links ["/tickets/.."]
+  Map<Date, List<MovieTime>> times = {};
+
+  @override
+  String toString() => "'$title'@$times";
 }
 
 class MovieTime {
-  static DateFormat timeFormat = new DateFormat('HH:mm');
+  static final int midnightHour = 4;
 
-  DateTime start;
-  DateTime end;
+  Time start;
+  Time end;
   bool active;
   bool full;
   String link;
 
   @override
   String toString() {
-    return timeFormat.format(start);
+    return start.format();
   }
 }
 

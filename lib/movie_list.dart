@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:movie_calendar/datetime/date_utils.dart';
 import 'package:movie_calendar/movie.dart';
+import 'package:movie_calendar/time_text.dart';
 
 class MovieListPage extends StatelessWidget {
-  List<Movie> _movies;
+  final Future<List<Movie>> _movieFuture;
 
-  MovieListPage(this._movies);
+  MovieListPage(this._movieFuture);
 
   @override
   Widget build(BuildContext context) {
@@ -12,45 +16,65 @@ class MovieListPage extends StatelessWidget {
         appBar: new AppBar(
           title: new Text('Movies'),
         ),
-        body: new ListView.builder(
-            itemCount: _movies.length,
-            itemBuilder: (context, index) {
-              _movies[index].times.sort((t1, t2) => t1.start.compareTo(t2.end));
-              var nearest = _movies[index].times.first;
-              var startingIn = nearest.start.difference(new DateTime.now());
-              bool hasStarted = new DateTime.now().isAfter(nearest.start);
+        body: new FutureBuilder<List<Movie>>(
+            future: _movieFuture,
+            builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return new Center(
+              child: new CircularProgressIndicator()
+            );
 
-              bool startsSoon = startingIn <= new Duration(minutes: 60);
+          List<Movie> _movies = snapshot.data;
 
-              //return new Card(
-                  return new ListTile(
-                      title: new Text(_movies[index].title
+          return new ListView.builder(
+              itemCount: _movies.length,
+              itemBuilder: (context, index) {
+                Movie movie = _movies[index];
+                return new ListTile(
+                    title: new Text(movie.title
 
-                      ),
-                      subtitle: new Row(
-                          children: <Widget>[
-                            new Expanded(
-                                child: new Text(
-                                    hasStarted ? 'Just started' : (
-                                        startsSoon ? '${startingIn
-                                            .inMinutes} min' :
-                                        MovieTime.timeFormat.format(
-                                            nearest.start)),
-                                    style: new TextStyle(
-                                        color: hasStarted
-                                            ? Colors.red
-                                            : (startsSoon
-                                            ? Colors.orange
-                                            : Colors.green)
-                                    )
-                                )
-                            ),
-                            new Text('Euroscoop')
-                          ])
-                  );
-              //);
-            }
-        )
+                    ),
+                    subtitle: new Row(
+                        children: createShowTimesRow(movie)
+                    )
+                );
+              }
+          );
+        })
     );
+  }
+
+  List<Widget> createShowTimesRow(Movie movie, {int maxColumns = 0}) {
+    List<Widget> result = [];
+
+    if (movie == null)
+      return result;
+
+    List<MovieTime> timesOfToday = movie.times[Date.today()];
+
+    if (timesOfToday.isEmpty) {
+      result.add(
+          new Text("No shows today",
+              style: new TextStyle(
+                  color: Colors.grey
+              )
+          )
+      );
+      return result;
+    }
+
+    if (maxColumns <= 0)
+      maxColumns = timesOfToday.length;
+
+    for (int i = 0; i < maxColumns; i++) {
+      result.add(
+        new Padding(
+          padding: new EdgeInsets.only(right: 10.0),
+          child: new TimeText(timesOfToday[i])
+        )
+      );
+    }
+
+    return result;
   }
 }
