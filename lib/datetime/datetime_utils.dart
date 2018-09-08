@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class Date {
-  static DateFormat defaultFormat = new DateFormat('d-MM-y');
+  static DateFormat defaultFormat = new DateFormat('dd-MM-y');
 
   final int _year;
   final int _month;
