@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
-import 'package:movie_calendar/datetime/date_utils.dart';
-import 'package:movie_calendar/datetime/time_utils.dart';
+import 'package:movie_calendar/datetime/datetime_utils.dart';
 import 'package:movie_calendar/movie.dart';
 import 'package:movie_calendar/movie_parser.dart';
 import 'package:xml/xml.dart' as xml;
@@ -75,18 +74,18 @@ class MovieParserPathe extends MovieParser {
                     .firstWhere((e) =>
                 "schedule-time__start" == e.getAttribute('class'),
                     orElse: () => null)?.text;
-                movieTime.start = Time.parse(rawStartTime);
-                if (movieTime.start.isBefore(new Time(4, 0)))
-                  movieTime.start = movieTime.start.add(hours: 24);
+                movieTime.start = Time.parse(rawStartTime).onDate(date);
+                if (movieTime.start.isBefore(date.atTime(new Time(4, 0))))
+                  movieTime.start = movieTime.start.plus(hours: 24);
 
                 //Parse end time
                 String rawEndTime = timeSpan.findAllElements('span')
                     .firstWhere((e) =>
                 "schedule-time__end" == e.getAttribute('class'),
                     orElse: () => null)?.text;
-                movieTime.end = Time.parse(rawEndTime);
-                if (movieTime.end.isBefore(new Time(4, 0)))
-                  movieTime.end = movieTime.end.add(hours: 24);
+                movieTime.end = Time.parse(rawEndTime).onDate(date);
+                if (movieTime.end.isBefore(date.atTime(new Time(4, 0))))
+                  movieTime.end = movieTime.end.plus(hours: 24);
 
                 movie.times[date].add(movieTime);
               });

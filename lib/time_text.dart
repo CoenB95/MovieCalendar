@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:movie_calendar/datetime/time_utils.dart';
+import 'package:movie_calendar/datetime/datetime_utils.dart';
 import 'package:movie_calendar/movie.dart';
 
 class TimeText extends StatefulWidget {
@@ -40,7 +40,7 @@ class TimeTextState extends State<TimeText> {
 
   void updateTime() {
     setState(() {
-      _startingIn = widget.time.start.difference(Time.now());
+      _startingIn = widget.time.start.difference(new TimeOnDate.now());
     });
   }
 
@@ -49,7 +49,7 @@ class TimeTextState extends State<TimeText> {
     return new Text(
         justStarted ? 'Just started' :
         (startsSoon ? '${startingIn.inMinutes + 1} min' :
-        widget.time.start.format()),
+        widget.time.start.format(format: Time.defaultFormat)),
         style: new TextStyle(
             color:
             hasStarted

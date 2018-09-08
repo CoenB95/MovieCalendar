@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:movie_calendar/datetime/date_utils.dart';
+import 'package:movie_calendar/datetime/datetime_utils.dart';
 import 'package:movie_calendar/movie.dart';
 
 abstract class MovieParser {
@@ -11,7 +11,9 @@ abstract class MovieParser {
     return new Future(() async {
       List<Movie> result = [];
       for (Date d in dates) {
-        var day = await fetchMoviesOfDay(d);
+        var day = await fetchMoviesOfDay(d).catchError((e){
+          print(e);
+        });
         day.forEach((m) {
           Movie original = result.firstWhere((o) => o.title == m.title,
               orElse: () => null);

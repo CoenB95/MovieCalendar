@@ -1,5 +1,4 @@
-import 'package:movie_calendar/datetime/date_utils.dart';
-import 'package:movie_calendar/datetime/time_utils.dart';
+import 'package:movie_calendar/datetime/datetime_utils.dart';
 
 class Movie {
   String title;
@@ -12,8 +11,8 @@ class Movie {
 class MovieTime {
   static final int midnightHour = 4;
 
-  Time start;
-  Time end;
+  TimeOnDate start;
+  TimeOnDate end;
   bool active;
   bool full;
   String link;

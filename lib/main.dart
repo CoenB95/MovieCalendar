@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_calendar/datetime/date_utils.dart';
+import 'package:movie_calendar/datetime/datetime_utils.dart';
 import 'package:movie_calendar/movie_list.dart';
 import 'package:movie_calendar/movie_parser.dart';
 import 'package:movie_calendar/parser/pathe_parser.dart';

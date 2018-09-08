@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:movie_calendar/datetime/date_utils.dart';
+import 'package:movie_calendar/datetime/datetime_utils.dart';
 import 'package:movie_calendar/movie.dart';
 import 'package:movie_calendar/movie_detail.dart';
 import 'package:movie_calendar/time_text.dart';
