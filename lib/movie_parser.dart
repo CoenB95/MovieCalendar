@@ -12,8 +12,16 @@ abstract class MovieParser {
       List<Movie> result = [];
       for (Date d in dates) {
         var day = await fetchMoviesOfDay(d);
-        result.addAll(day);
+        day.forEach((m) {
+          Movie original = result.firstWhere((o) => o.title == m.title,
+              orElse: () => null);
+          if (original != null)
+            original.times.addAll(m.times);
+          else
+            result.add(m);
+        });
       }
+      result.sort((a, b) => a.title.compareTo(b.title));
       return result;
     });
   }
