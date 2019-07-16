@@ -11,6 +11,7 @@ class Movie {
 class MovieTime {
   static final int midnightHour = 4;
 
+  Movie movie;
   TimeOnDate start;
   TimeOnDate end;
   bool active;
